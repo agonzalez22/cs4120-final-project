@@ -28,13 +28,16 @@ def get_audio_text(pathname:str, files:list) -> list:
     # intialize the recognizer...
     r = sr.Recognizer()
     for file in files: 
-        with sr.AudioFile(pathname + '/' + file) as source:
-            audio = r.record(source)
-            try: 
-                s = r.recognize_google(audio)
-            except: 
-                s = 0 # in case our recognizer fails, we will just assign 0...
-            texts.append(s)
+        if file.endswith('.wav'): 
+            code_lst = file.split('-') # splits the file_name up into fragments 
+            emotion_label = int(code_lst[2]) 
+            with sr.AudioFile(pathname + '/' + file) as source:
+                audio = r.record(source)
+                try: 
+                    s = r.recognize_google(audio)
+                except: 
+                    s = 0 # in case our recognizer fails, we will just assign 0...
+                texts.append((s, emotion_label))
     return texts
 
 def seperate_tups(lst:list) -> tuple: 
