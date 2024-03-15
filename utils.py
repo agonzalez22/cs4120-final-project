@@ -1,4 +1,6 @@
-""" Utils functions for final project """ 
+""" Utils functions for final project
+Alina G and Jesse E
+ """ 
 import numpy as np 
 import librosa
 import speech_recognition as sr
