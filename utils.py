@@ -5,6 +5,7 @@ Text
 import numpy as np 
 import librosa
 import speech_recognition as sr
+import json
 
 def load_wavs(pathname: str, files:list, get_labels=True) -> list: 
     """ takes a list of paths leading to .wav files and reads them. Also gets 
@@ -14,7 +15,8 @@ def load_wavs(pathname: str, files:list, get_labels=True) -> list:
     values = []
     for file in files: 
         if file.endswith('.wav'):
-            sig_rate = librosa.load(pathname + '/' + file, sr=None)
+            sig, rate = librosa.load(pathname + '/' + file, sr=None)
+            sig_rate = (sig.tolist(), rate)
             code_lst = file.split('-') # splits the file_name up into fragments 
             emotion_label = int(code_lst[2]) 
             values.append((sig_rate, emotion_label)) 
@@ -47,3 +49,9 @@ def seperate_tups(lst:list) -> tuple:
         x.append(pair[0])
         y.append(pair[1])
     return x, y
+
+def write_files(dct:dict, path: str)-> None: 
+    """ writes files into json format """
+    with open(path, 'w') as file: 
+        json.dump(dct, file)
+    print(f'Successfully dumped data into {path}!')
