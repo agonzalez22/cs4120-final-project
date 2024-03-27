@@ -6,6 +6,15 @@ import numpy as np
 import librosa
 import speech_recognition as sr
 import json
+from collections import Counter
+import math
+import random
+import time
+
+# constants
+SENTENCE_BEGIN = "<s>"
+SENTENCE_END = "</s>"
+UNK = "<UNK>"
 
 def load_wavs(pathname: str, files:list, get_labels=True) -> list: 
     """ takes a list of paths leading to .wav files and reads them. Also gets 
@@ -56,7 +65,26 @@ def write_files(dct:dict, path: str)-> None:
         json.dump(dct, file)
     print(f'Successfully dumped data into {path}!')
 
+def create_ngrams(tokens: list, n: int) -> list:
+  """Creates n-grams for the given token sequence.
+  Args:
+    tokens (list): a list of tokens as strings
+    n (int): the length of n-grams to create
 
+  Returns:
+    list: list of tuples of strings, each tuple being one of the individual n-grams
+  """
+  lst = []
+  for i in range(len(tokens)): 
+    ngrams = []
+    for j in range(i, i+n): 
+      try: 
+        ngrams.append(tokens[j])
+      except: 
+        break
+    if len(ngrams) == n: 
+      lst.append(tuple(ngrams))
+  return lst 
 
 class LanguageModel:
 
